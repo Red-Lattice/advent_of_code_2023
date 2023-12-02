@@ -1,41 +1,34 @@
-use std::io::{BufRead, BufReader};
-use std::fs::File;
+pub fn main() -> u32 {
+    let input_file = include_str!("problem_1_input.txt");
+    let mut total = 0;
 
-pub fn main() -> u64 {
-    let input_file = File::open("problem_1_input.txt").unwrap();
-
-    let mut lines_vec: Vec<String> = vec![];
-    let mut finish_vec: Vec<u32> = vec![];
-
-    // TODO: Optimize this down to calculate each line live instead of reading and then calculating. (currently O(2n) instead of O(n))
-    for line in BufReader::new(input_file).lines() {
-        lines_vec.push(line.unwrap().parse().unwrap());
-    }
-    for line in lines_vec {
-        finish_vec.push(collapse_beginning(&line));
+    for line in (input_file).lines() {
+        total += collapse_beginning(&line) + collapse_end(&line);
     }
 
-    return 0;
+    return total;
 }
 
 fn collapse_beginning(input: &str) -> u32 {
     let mut total: u32 = 0;
-    for (i, c) in input.chars().enumerate() {
-        if let Some(c) = c.to_digit(10) {return c;}
+    for c in input.chars() {
+        if let Some(c) = c.to_digit(10) {return c * 10;}
         total = (total << 4) | dict(c);
-        if check_current_total(total) != 0 {return check_current_total(total);} 
-        total = (total << 12) >> 12; // 00000000000010001000100010001000
+        total = (total << 12) >> 12;
+        let check = check_current_total(total);
+        if check != 0 {return check;} 
     }
     return 0;
 }
 
 fn collapse_end(input: &str) -> u32 {
     let mut total: u32 = 0;
-    for (i, c) in input.chars().enumerate() {
+    for c in input.chars().rev() {
         if let Some(c) = c.to_digit(10) {return c;}
         total = (total << 4) | dict(c);
-        if check_current_total_end(total) != 0 {return check_current_total(total);} 
-        total = (total << 12) >> 12; // 00000000000010001000100010001000
+        total = (total << 12) >> 12;
+        let check = check_current_total_end(total);
+        if check != 0 {return check;} 
     }
     return 0;
 }
@@ -74,31 +67,31 @@ fn check_current_total(val: u32) -> u32
 fn check_current_total_end(val: u32) -> u32
 {
     match val {
-        673809 => 3,
-        597014 => 7,
-        86858 => 8,
+        71754 => 3,
+        400409 => 7,
+        672593 => 8,
         _ => match (val << 16) >> 16 {
-            10168 => 4,
-            9665 => 5,
-            25953 => 9,
+            35698 => 4,
+            7250 => 5,
+            5718 => 9,
             _ => match (val << 20) >> 20 {
-                1889 => 1,
-                2775 => 2,
-                2398 => 6,
+                359 => 1,
+                2010 => 2,
+                3673 => 6,
                 _ => 0,
             },
         }
     }
     /*
-    one (eno) = (0001 0110 0111) = 1889
-    two (owt) = (0111 1101 1010) = 2775
-    three (eerht) = (0001 0001 1000 0100 1010)= 673809
-    four (ruof) = (1000 1011 0111 0010) = 10168
-    five (evif) = (0001 1100 0101 0010) = 9665
-    six (xis) = (1110 0101 1001) = 2398
-    seven (neves) = (0110 0001 1100 0001 1001) = 597014
-    eight (thgie) = (1010 0100 0011 0101 0001) = 86858
-    nine (enin) = (0001 0110 0101 0110) = 25953
+    one (eno) = (0001 0110 0111) = 359
+    two (owt) = (0111 1101 1010) = 2010
+    three (eerht) = (0001 0001 1000 0100 1010)= 71754
+    four (ruof) = (1000 1011 0111 0010) = 35698
+    five (evif) = (0001 1100 0101 0010) = 7250
+    six (xis) = (1110 0101 1001) = 3673
+    seven (neves) = (0110 0001 1100 0001 1001) = 400409
+    eight (thgie) = (1010 0100 0011 0101 0001) = 672593
+    nine (enin) = (0001 0110 0101 0110) = 5718
      */
 }
 
