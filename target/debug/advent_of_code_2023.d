@@ -1,0 +1,1 @@
+C:\Users\Ian\projects\advent_of_code_2023\target\debug\advent_of_code_2023.exe: C:\Users\Ian\projects\advent_of_code_2023\src\main.rs C:\Users\Ian\projects\advent_of_code_2023\src\solution_1\mod.rs C:\Users\Ian\projects\advent_of_code_2023\src\solution_1\solution_1.rs
