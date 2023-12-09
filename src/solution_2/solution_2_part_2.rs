@@ -18,6 +18,7 @@ fn collapse(input: &str) -> u32 {
     let mut min_green = 0;
     let mut min_blue = 0;
     let mut total: u32 = 0;
+    let mut skips: u8 = 0;
     for c in input.chars() {
         total = (total << 4) | dict(c);
         total = (total << 16) >> 16; // We check in blocks of 4
@@ -35,8 +36,7 @@ fn check_current_total(input: u32, min_red: &mut u32, min_green: &mut u32, min_b
     //println!("Imput: {}", input);
     while input_copy != 0 { // 0001 011(0) 1 111 1 0010
         let mut ran = false;
-        let comp = input_copy;
-        match (comp << 28) >> 28 {
+        match (input_copy << 28) >> 28 {
             0 => {nums = true;}, // No leading zeros
             1 => {if nums {total += 10;} else {total += 1;}; nums = true;},
             2 => {if nums {total += 20;} else {total += 2;}; nums = true;},
